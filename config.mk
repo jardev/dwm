@@ -21,8 +21,12 @@ FREETYPEINC = /usr/include/freetype2
 #FREETYPEINC = ${X11INC}/freetype2
 
 # includes and libs
-INCS = -I${X11INC} -I${FREETYPEINC}
-LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${FREETYPELIBS}
+INCS = -I/usr/local/include -I${X11INC} -I${FREETYPEINC} \
+       `pkg-config --cflags fontconfig` \
+       `pkg-config --cflags freetype2`
+LIBS = -L/usr/local/lib -L${X11LIB} -lX11 ${XINERAMALIBS} ${FREETYPELIBS} \
+       `pkg-config --libs fontconfig` \
+       `pkg-config --libs freetype2`
 
 # flags
 CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_POSIX_C_SOURCE=2 -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
