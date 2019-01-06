@@ -100,6 +100,8 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", color[Gray1], "-nf", color[Gray3], "-sb", color[Blue], "-sf", color[Gray2], NULL };
 static const char *termcmd[]  = { "st", NULL };
+static const char *setxkbmapcmd[] = { "/home/jardev/bin/changexkbmap", NULL };
+
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -136,6 +138,7 @@ static Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+	{ Mod1Mask,			XK_space,  spawn, 	   {.v = setxkbmapcmd } },
 };
 
 /* button definitions */
