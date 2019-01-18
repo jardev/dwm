@@ -1311,7 +1311,7 @@ monocle(Monitor *m)
 	if (n > 0) /* override layout symbol */
 		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n);
 	for (c = nexttiled(m->clients); c; c = nexttiled(c->next))
-		resize(c, m->wx + padpx, m->wy + padpx, m->ww - 2 * padpx - 2 * c->bw, m->wh - 2 * padpx - 2 * c->bw, 0);
+		resize(c, m->wx + padpx, m->wy + padpx, m->ww - 2 * c->bw - 2*padpx, m->wh - 2 * c->bw - 2*padpx, 0);
 }
 
 void
@@ -1516,8 +1516,10 @@ resizeclient(Client *c, int x, int y, int w, int h)
 	if (((nexttiled(c->mon->clients) == c && !nexttiled(c->next))
 	    || &monocle == c->mon->lt[c->mon->sellt]->arrange)
 	    && !c->isfullscreen) {
-		c->w = wc.width += c->bw * 2;
-		c->h = wc.height += c->bw * 2;
+		c->w = wc.width += c->bw * 2 + 2*padpx;
+		c->h = wc.height += c->bw * 2 + 2*padpx;
+		c->x = wc.x -= padpx;
+		c->y = wc.y -= padpx;
 		wc.border_width = 0;
 	}
 	XConfigureWindow(dpy, c->win, CWX|CWY|CWWidth|CWHeight|CWBorderWidth, &wc);
@@ -1960,13 +1962,13 @@ tile(Monitor *m)
 	for(i = 0, my = ty = padpx, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
 		if(i < m->nmaster) {
 			r = MIN(n, m->nmaster) - i;
-			h = (m->wh - my - gappx * (r - 1) - 2*padpx) / r;
+			h = (m->wh - my - gappx * (r - 1) - padpx) / r;
 			resize(c, m->wx + padpx, m->wy + my, mw - (2*c->bw), h - (2*c->bw), False);
 			my += HEIGHT(c) + gappx;
 		}
 		else {
 			r = n - i;
-			h = (m->wh - ty - gappx * (r - 1) - 2*padpx) / r;
+			h = (m->wh - ty - gappx * (r - 1) - padpx) / r;
 			resize(c, m->wx + padpx + mw + g, m->wy + ty, m->ww - 2*padpx - mw - g - (2*c->bw), h - (2*c->bw), False);
 			ty += HEIGHT(c) + gappx;
 		}
