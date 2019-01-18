@@ -798,6 +798,10 @@ drawbar(Monitor *m)
 	Client *c;
 	Clr *prevscheme, *nxtscheme;
 
+	/* draw background */
+	drw_setscheme(drw, scheme[SchemeNorm]);
+	drw_rect(drw, 0, 0, m->ww, bh, 1, 1);
+
 	if (showsystray && m == systraytomon(m))
 		stw = getsystraywidth();
 
@@ -908,7 +912,7 @@ drawstatus(Monitor* m)
 	    x -= plw * 2;
 	}
 
-	return m->ww - x - stw;
+	return m->ww - x - stw + 2;
 }
 
 void

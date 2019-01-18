@@ -52,6 +52,7 @@ static const char *colors[][3]      = {
 };
 
 static const char *statuscolors[][5] = {
+	{ color[Gray3], color[Gray1], color[Gray4] },
         { color[Gray3], color[Gray2], color[Gray2] }, /* dark */
         { color[Gray1], color[Gray3], color[Gray4] }, /* light */
         { color[Gray1], color[LightBlue], color[Blue] },
