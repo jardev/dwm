@@ -794,7 +794,7 @@ drawbar(Monitor *m)
 {
 	int x, w, wt, sw = 0, stw = 0;
 	unsigned int i, occ = 0, urg = 0, n = 0;
-	plw = drw->fonts->h / 2 + 1;
+	plw = drw->fonts->h / 4 + 1;
 	Client *c;
 	Clr *prevscheme, *nxtscheme;
 
@@ -841,8 +841,8 @@ drawbar(Monitor *m)
 	drw_setscheme(drw, scheme[SchemeNorm]);
 	x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
 
-	if ((m->ww - sw - x) > bh && n > 0) {
-		wt = (m->ww - sw - x) / n - 2 * plw;
+	if ((m->ww - sw - stw - x) > bh && n > 0) {
+		wt = (m->ww - sw - stw - x) / n - 2 * plw;
 		for (c = m->clients; c; c = c->next) {
 			if (!ISVISIBLE(c)) continue; /* only show titles of windows on current tag */
 			drw_setscheme(drw, c == m->sel ? scheme[SchemeTitleSel] : scheme[SchemeTitle]);
@@ -855,7 +855,7 @@ drawbar(Monitor *m)
 		}
 	} else { /* when empty or not enough space to draw, clear out the title space */
 		drw_setscheme(drw, scheme[SchemeNorm]);
-		drw_rect(drw, x, 0, m->ww - sw - x, bh, 1, 1);
+		drw_rect(drw, x, 0, m->ww - sw - stw - x, bh, 1, 1);
 	}
 	drw_map(drw, m->barwin, 0, 0, m->ww, bh);
 }
@@ -864,9 +864,14 @@ int
 drawstatus(Monitor* m)
 {
 	char status[256];
-	int i, n = strlen(stext), cn = 0;
+	int i, n = strlen(stext), cn = 0, stw = 0;
 	int x = m->ww, w = 0;
 	char *bs, bp = '|';
+
+	if (showsystray && m == systraytomon(m))
+		stw = getsystraywidth();
+
+	x -= stw;
 	Clr *prevscheme = statusscheme[0], *nxtscheme;
 
 	strcpy(status, stext);
@@ -903,7 +908,7 @@ drawstatus(Monitor* m)
 	    x -= plw * 2;
 	}
 
-	return m->ww - x;
+	return m->ww - x - stw;
 }
 
 void
