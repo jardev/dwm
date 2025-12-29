@@ -32,10 +32,13 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 *	WM_WINDOW_ROLE(STRING) = role
 	 */
-	/* class      instance    title       role        tags mask     isfloating   isfakefullscreen   monitor   issticky */
-	{ "Gimp",     NULL,       NULL,       NULL,       0,            1,           0,                 -1,       0 },
-	{ "Firefox",  NULL,       NULL,       NULL,       1 << 8,       0,           1,                 -1,       0 },
-	{ "Chromium", NULL,       NULL,       "pop-up",   0,            1,           0,                 -1,       0 },
+	/* class      instance    title       role        tags mask     isfloating   isfakefullscreen   monitor   issticky  ignoretransient */
+	{ "Gimp",     NULL,       NULL,       NULL,       0,            1,           0,                 -1,       0,        0 },
+	{ "Firefox",  NULL,       NULL,       NULL,       1 << 8,       0,           1,                 -1,       0,        0 },
+	{ "Chromium", NULL,       NULL,       "pop-up",   0,            1,           0,                 -1,       0,        0 },
+	/* Linked Helper */
+	{ "linked-helper", NULL,  NULL,       NULL,       0,            1,           0,                 -1,       0,        1 },
+	{ NULL,       NULL,       "*Feed | LinkedIn", NULL, 0,          1,           0,                 -1,       0,        1 },
 };
 
 /* layout(s) */
