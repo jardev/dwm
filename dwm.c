@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <fnmatch.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -79,7 +80,7 @@ enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
        NetWMWindowTypeDialog, NetClientList, NetDesktopNames, NetDesktopViewport, NetNumberOfDesktops, NetCurrentDesktop, NetLast }; /* EWMH atoms */
 
 enum { Manager, Xembed, XembedInfo, XLast }; /* Xembed atoms */
-enum { WMProtocols, WMDelete, WMState, WMTakeFocus, WMLast }; /* default atoms */
+enum { WMProtocols, WMDelete, WMState, WMTakeFocus, WMWindowRole, WMLast }; /* default atoms */
 enum { ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle,
        ClkClientWin, ClkRootWin, ClkLast }; /* clicks */
 
@@ -152,11 +153,12 @@ typedef struct {
 	const char *class;
 	const char *instance;
 	const char *title;
+	const char *role;
 	unsigned int tags;
 	int isfloating;
 	int isfakefullscreen;
 	int monitor;
-  int issticky;
+	int issticky;
 } Rule;
 
 typedef struct Systray   Systray;
@@ -245,6 +247,7 @@ static void tagmon(const Arg *arg);
 static void tile(Monitor *m);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
+static void togglefullscreen();
 static void togglesticky(const Arg *arg);
 static void toggletag(const Arg *arg);
 static void toggleview(const Arg *arg);
@@ -321,11 +324,15 @@ struct NumTags { char limitexceeded[LENGTH(tags) > 31 ? -1 : 1]; };
 void
 applyrules(Client *c)
 {
-	const char *class, *instance;
+	const char *class, *instance, *role;
+	char *windowrole = NULL;
 	unsigned int i;
+	unsigned long n, extra;
+	int format;
 	const Rule *r;
 	Monitor *m;
 	XClassHint ch = { NULL, NULL };
+	Atom real;
 
 	/* rule matching */
 	c->isfloating = 0;
@@ -334,14 +341,20 @@ applyrules(Client *c)
 	class    = ch.res_class ? ch.res_class : broken;
 	instance = ch.res_name  ? ch.res_name  : broken;
 
+	if (XGetWindowProperty(dpy, c->win, wmatom[WMWindowRole], 0L, 256L, False, XA_STRING,
+		&real, &format, &n, &extra, (unsigned char **)&windowrole) != Success)
+		windowrole = NULL;
+	role = windowrole ? windowrole : broken;
+
 	for (i = 0; i < LENGTH(rules); i++) {
 		r = &rules[i];
-		if ((!r->title || strstr(c->name, r->title))
-		&& (!r->class || strstr(class, r->class))
-		&& (!r->instance || strstr(instance, r->instance)))
+		if ((!r->title || fnmatch(r->title, c->name, 0) == 0)
+		&& (!r->class || fnmatch(r->class, class, 0) == 0)
+		&& (!r->instance || fnmatch(r->instance, instance, 0) == 0)
+		&& (!r->role || fnmatch(r->role, role, 0) == 0))
 		{
 			c->isfloating = r->isfloating;
-      c->issticky = r->issticky;
+			c->issticky = r->issticky;
 			c->isfakefullscreen = r->isfakefullscreen;
 			c->tags |= r->tags;
 			for (m = mons; m && m->num != r->monitor; m = m->next);
@@ -353,6 +366,8 @@ applyrules(Client *c)
 		XFree(ch.res_class);
 	if (ch.res_name)
 		XFree(ch.res_name);
+	if (windowrole)
+		XFree(windowrole);
 	c->tags = c->tags & TAGMASK ? c->tags & TAGMASK : c->mon->tagset[c->mon->seltags];
 }
 
@@ -925,7 +940,13 @@ focus(Client *c)
 		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
 		XDeleteProperty(dpy, root, netatom[NetActiveWindow]);
 	}
-	selmon->sel = c;
+	if(selmon->sel && selmon->sel->isfullscreen){
+		togglefullscreen();
+		selmon->sel = c;
+		togglefullscreen();
+	}else{
+		selmon->sel = c;
+	}
 	drawbars();
 }
 
@@ -1813,6 +1834,7 @@ setup(void)
 	wmatom[WMDelete] = XInternAtom(dpy, "WM_DELETE_WINDOW", False);
 	wmatom[WMState] = XInternAtom(dpy, "WM_STATE", False);
 	wmatom[WMTakeFocus] = XInternAtom(dpy, "WM_TAKE_FOCUS", False);
+	wmatom[WMWindowRole] = XInternAtom(dpy, "WM_WINDOW_ROLE", False);
 	netatom[NetActiveWindow] = XInternAtom(dpy, "_NET_ACTIVE_WINDOW", False);
 	netatom[NetSupported] = XInternAtom(dpy, "_NET_SUPPORTED", False);
 	netatom[NetSystemTray] = XInternAtom(dpy, "_NET_SYSTEM_TRAY_S0", False);
@@ -2025,6 +2047,14 @@ togglesticky(const Arg *arg)
 }
 
 void
+togglefullscreen()
+{
+	if (selmon->sel){
+		setfullscreen(selmon->sel, !selmon->sel->isfullscreen);
+	}
+}
+
+void
 toggletag(const Arg *arg)
 {
 	unsigned int newtags;
@@ -2071,6 +2101,7 @@ unmanage(Client *c, int destroyed)
 {
 	Monitor *m = c->mon;
 	XWindowChanges wc;
+	int fullscreen = (selmon->sel == c && selmon->sel->isfullscreen)?1:0;
 
 	detach(c);
 	detachstack(c);
@@ -2088,6 +2119,9 @@ unmanage(Client *c, int destroyed)
 	}
 	free(c);
 	focus(NULL);
+	if(fullscreen){
+		togglefullscreen();
+	}
 	updateclientlist();
 	arrange(m);
 }

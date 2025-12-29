@@ -30,10 +30,12 @@ static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
+	 *	WM_WINDOW_ROLE(STRING) = role
 	 */
-	/* class      instance    title       tags mask     isfloating   isfakefullscreen monitor */
-	{ "Gimp",     NULL,       NULL,       0,            1,           0,               -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           1,               -1 },
+	/* class      instance    title       role        tags mask     isfloating   isfakefullscreen   monitor   issticky */
+	{ "Gimp",     NULL,       NULL,       NULL,       0,            1,           0,                 -1,       0 },
+	{ "Firefox",  NULL,       NULL,       NULL,       1 << 8,       0,           1,                 -1,       0 },
+	{ "Chromium", NULL,       NULL,       "pop-up",   0,            1,           0,                 -1,       0 },
 };
 
 /* layout(s) */
@@ -81,10 +83,10 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
+	{ MODKEY,						XK_f,	   togglefullscreen, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
