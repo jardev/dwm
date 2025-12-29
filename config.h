@@ -89,7 +89,7 @@ static const char *termcmd[]  = { TERMINAL, NULL };
 /* scratchpads */
 const char *spcmd1[] = { TERMINAL, "--class=spterm", "--x11-instance-name=spterm", NULL };
 const char *spcmd2[] = { TERMINAL, "--class=spfm", "--x11-instance-name=spfm", "-e", "ranger", NULL };
-const char *spcmd3[] = { TERMINAL, "--class=spcalc", "--x11-instance-name=spcalc", "--font-size=14", "-e", "python", "-q", NULL };
+const char *spcmd3[] = { TERMINAL, "--class=spcalc", "--x11-instance-name=spcalc", "--font-size=14", "-e", "bc", "-lq", NULL };
 static Sp scratchpads[] = {
 	/* name          cmd  */
 	{"spterm",      spcmd1},
@@ -157,7 +157,6 @@ static const Key keys[] = {
 	{ 0, XF86XK_AudioForward,                      spawn,                  {.v = (const char*[]){ "mpc", "seek", "+10", NULL } } },
 	{ 0, XF86XK_AudioMicMute,                      spawn,                  SHCMD("pactl set-source-mute @DEFAULT_SOURCE@ toggle") },
 	{ 0, XF86XK_PowerOff,                          spawn,                  SHCMD("systemctl suspend") },
-	{ 0, XF86XK_Calculator,                        spawn,                  {.v = (const char*[]){ TERMINAL, "-e", "bc", "-l", NULL } } },
 	{ 0, XF86XK_DOS,                               spawn,                  {.v = termcmd } },
 	{ 0, XF86XK_ScreenSaver,                       spawn,                  SHCMD("lock & xset dpms force off; mpc pause; pauseallmpv") },
 	{ 0, XF86XK_MonBrightnessUp,                   spawn,                  {.v = (const char*[]){ "brightnessctl", "set", "5%+", NULL } } },
