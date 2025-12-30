@@ -16,7 +16,7 @@ static const int topbar             = 1;        /* 0 means bottom bar */
 enum showtab_modes { showtab_never, showtab_auto, showtab_nmodes, showtab_always};
 static const int showtab            = showtab_auto;        /* Default tab bar show mode */
 static const int toptab             = False;               /* False means bottom tab bar */
-static const char *fonts[]          = { "monospace:size=11" };
+static const char *fonts[]          = { "monospace:size=11", "Noto Color Emoji:size=11" };
 static const char dmenufont[]       = "monospace:size=11";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
@@ -162,6 +162,8 @@ static const Key keys[] = {
 	{ 0, XF86XK_MonBrightnessUp,                   spawn,                  {.v = (const char*[]){ "brightnessctl", "set", "5%+", NULL } } },
 	{ 0, XF86XK_MonBrightnessDown,                 spawn,                  {.v = (const char*[]){ "brightnessctl", "set", "5%-", NULL } } },
   { 0, XF86XK_Calculator,                        togglescratch, {.ui = 2 } },
+  { 0, XK_Print,                                 spawn,                  SHCMD("maim pic-full-$(date '+%y%m%d-%H%M-%S').png") },
+	{ ShiftMask, XK_Print,                         spawn,                  {.v = (const char*[]){ "maimpick", NULL } } },
 };
 
 /* button definitions */
