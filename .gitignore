@@ -1,0 +1,5 @@
+dwm
+*.bak
+*.o
+*.diff
+*.swp
