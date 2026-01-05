@@ -62,3 +62,5 @@ This build includes:
 - **cyclelayouts** - Cycle through layouts (Mod+Ctrl+,/.)
 - **scratchpads** - Toggle-able floating terminals (Mod+` for terminal, Mod+u for ranger)
 - **fullgaps** - Gaps between windows (Mod+- decrease, Mod+= increase, Mod+Shift+= reset)
+- **noborder** - Remove border when only one window visible (solitary tiled or monocle)
+- **barpadding** - Horizontal padding for bar (sidepad config option, default 8px)
