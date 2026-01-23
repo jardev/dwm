@@ -19,22 +19,13 @@ static const int noborder           = 0;        /* 1 to remove border when only 
 enum showtab_modes { showtab_never, showtab_auto, showtab_nmodes, showtab_always};
 static const int showtab            = showtab_auto;        /* Default tab bar show mode */
 static const int toptab             = False;               /* False means bottom tab bar */
-// static const char *fonts[]          = { "monospace:size=11", "Noto Color Emoji:size=11" };
 static const char *fonts[]                    = { "MesloLGS Nerd Font Mono:size=10:antialias=true:autohint=true:hintstyle=hintfull", "NotoColorEmoji:pixelsize=24:antialias=true:autohint=true" };
-//static const char dmenufont[]       = "monospace:size=11";
 static const char dmenufont[]       = "MesloLGS Nerd Font Mono:size=10";
-static const char col_gray1[]       = "#222222";
-static const char col_gray2[]       = "#444444";
-static const char col_gray3[]       = "#bbbbbb";
-static const char col_gray4[]       = "#eeeeee";
-static const char col_cyan[]        = "#005577";
 static const char normbordercolor[]           = "#3B4252";
 static const char normbgcolor[]               = "#282828";
 static const char normfgcolor[]               = "#D4BE98";
 static const char selbordercolor[]            = "#434C5E";
-//static const char selbgcolor[]                = "#434C5E";
 static const char selbgcolor[]                = "#3F3F3F";
-//static const char selfgcolor[]                = "#ECEFF4";
 static const char selfgcolor[]                = "#E4CEA8";
 
 static const char *colors[][3] = {
@@ -42,12 +33,6 @@ static const char *colors[][3] = {
     [SchemeNorm] = { normfgcolor, normbgcolor, normbordercolor },
     [SchemeSel]  = { selfgcolor,  selbgcolor,  selbordercolor },
 };
-
-//static const char *colors[][3]      = {
-//	/*               fg         bg         border   */
-//	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-//	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
-//};
 
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
