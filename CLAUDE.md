@@ -64,3 +64,4 @@ This build includes:
 - **fullgaps** - Gaps between windows (Mod+- decrease, Mod+= increase, Mod+Shift+= reset)
 - **noborder** - Remove border when only one window visible (solitary tiled or monocle)
 - **barpadding** - Horizontal padding for bar (sidepad config option, default 8px)
+- **alttab2** - Traditional Alt+Tab window switching across all tags (Alt+Tab to cycle, Mod+o for winview)

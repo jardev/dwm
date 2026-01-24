@@ -2,6 +2,8 @@
 
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
+static const unsigned int tabModKey = 0x40;     /* Alt key for alt-tab */
+static const unsigned int tabCycleKey = 0x17;   /* Tab key for alt-tab */
 static const unsigned int gappx     = 8;        /* gaps between windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
@@ -93,7 +95,7 @@ static const char *termcmd[]  = { TERMINAL, NULL };
 
 /* scratchpads */
 const char *spcmd1[] = { TERMINAL, "--class=spterm", "--x11-instance-name=spterm", NULL };
-const char *spcmd2[] = { TERMINAL, "--class=spfm", "--x11-instance-name=spfm", "-e", "ranger", NULL };
+const char *spcmd2[] = { TERMINAL, "--class=spfm", "--x11-instance-name=spfm", "-e", "yazi", NULL };
 const char *spcmd3[] = { TERMINAL, "--class=spcalc", "--x11-instance-name=spcalc", "--font-size=14", "-e", "bc", "-lq", NULL };
 static Sp scratchpads[] = {
 	/* name          cmd  */
@@ -153,6 +155,8 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_minus,  setgaps,        {.i = -1 } },
 	{ MODKEY,                       XK_equal,  setgaps,        {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_equal,  setgaps,        {.i = 0  } },
+	{ Mod1Mask,                     XK_Tab,    alttab,         {0} },
+	{ MODKEY,                       XK_o,      winview,        {0} },
   { 0, XF86XK_AudioMute,                         spawn,                  SHCMD("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle; kill -RTMIN+5 $(pidof dwmblocks)") },
 	{ 0, XF86XK_AudioRaiseVolume,                  spawn,                  SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%- && wpctl set-volume @DEFAULT_AUDIO_SINK@ 3%+; kill -RTMIN+5 $(pidof dwmblocks)") },
 	{ 0, XF86XK_AudioLowerVolume,                  spawn,                  SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%+ && wpctl set-volume @DEFAULT_AUDIO_SINK@ 3%-; kill -RTMIN+5 $(pidof dwmblocks)") },
